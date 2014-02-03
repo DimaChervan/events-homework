@@ -18,7 +18,7 @@ PubSub.prototype.subscribe = function(eventName, handler) {
         return handler;
     }
     handlers = this.eventManager[eventName];
-    if (handlers && handlers.indexOf(handler) > 0) {
+    if (handlers && handlers.indexOf(handler) > -1) {
         return handler;
     }
     if (!handlers) {
