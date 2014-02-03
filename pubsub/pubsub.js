@@ -18,13 +18,13 @@ PubSub.prototype.subscribe = function(eventName, handler) {
         return handler;
     }
     handlers = this.eventManager[eventName];
+    if (handlers && handlers.indexOf(handler) > 0) {
+        return handler;
+    }
     if (!handlers) {
-        this.eventManager[eventName] = [];
-        this.eventManager[eventName].push(handler);
+        handlers = this.eventManager[eventName] = [];
     }
-    else if (handlers.indexOf(handler) == -1) {
-        handlers.push(handler);
-    }
+    handlers.push(handler);
     return handler;
 };
 
@@ -35,14 +35,12 @@ PubSub.prototype.subscribe = function(eventName, handler) {
  * @return {function}         ссылка на handler
  */
 PubSub.prototype.unsubscribe = function(eventName, handler) {
-    var handlers = this.eventManager[eventName],
-        index;
+    var handlers = this.eventManager[eventName];
     if (!handlers || !(handler instanceof Function)) {
         return handler;
     }
-    index = handlers.indexOf(handler);
-    if (index > -1) {
-        handlers.splice(index, 1);
+    if (handlers.indexOf(handler) > -1) {
+        handlers.splice(handlers.indexOf(handler), 1);
     }
     return handler;
 };
@@ -54,9 +52,8 @@ PubSub.prototype.unsubscribe = function(eventName, handler) {
  * @return {bool}             удачен ли результат операции
  */
 PubSub.prototype.publish = function(eventName, data) {
-    var handlers = this.eventManager[eventName];
-    if (handlers) {
-        handlers.forEach(function (fn) {
+    if (this.eventManager[eventName]) {
+        this.eventManager[eventName].forEach(function (fn) {
             setTimeout(function () {
                 fn(data);
             }, 10);
@@ -116,3 +113,4 @@ Function.prototype.subscribe = function(eventName) {
 Function.prototype.unsubscribe = function(eventName) {
     return this.pubSub.unsubscribe(eventName, this);
 };
+
