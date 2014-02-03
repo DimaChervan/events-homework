@@ -35,12 +35,14 @@ PubSub.prototype.subscribe = function(eventName, handler) {
  * @return {function}         ссылка на handler
  */
 PubSub.prototype.unsubscribe = function(eventName, handler) {
-    var handlers = this.eventManager[eventName];
+    var handlers = this.eventManager[eventName],
+        index;
     if (!handlers || !(handler instanceof Function)) {
         return handler;
     }
-    if (handlers.indexOf(handler) > -1) {
-        handlers.splice(handlers.indexOf(handler), 1);
+    index = handlers.indexOf(handler);
+    if (index > -1) {
+        handlers.splice(index, 1);
     }
     return handler;
 };
