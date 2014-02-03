@@ -14,7 +14,7 @@ function PubSub(){
  */
 PubSub.prototype.subscribe = function(eventName, handler) {
     var handlers;
-    if (eventName == undefined && handler instanceof Function) {
+    if (eventName == undefined || !(handler instanceof Function)) {
         return handler;
     }
     handlers = this.eventManager[eventName];
@@ -37,7 +37,7 @@ PubSub.prototype.subscribe = function(eventName, handler) {
 PubSub.prototype.unsubscribe = function(eventName, handler) {
     var handlers = this.eventManager[eventName],
         index;
-    if (!handlers || handler instanceof Function) {
+    if (!handlers || !(handler instanceof Function)) {
         return handler;
     }
     index = handlers.indexOf(handler);
@@ -116,4 +116,3 @@ Function.prototype.subscribe = function(eventName) {
 Function.prototype.unsubscribe = function(eventName) {
     return this.pubSub.unsubscribe(eventName, this);
 };
-
